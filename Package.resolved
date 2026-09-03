@@ -1,0 +1,24 @@
+{
+  "originHash" : "da3f47b00a47699286aa432e03dbf2262f1c08e6b65bc04c89de64842d98d656",
+  "pins" : [
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
+      }
+    },
+    {
+      "identity" : "swiftpy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/felfoldy/SwiftPy",
+      "state" : {
+        "revision" : "7d068f690b1184b1593587ec6f775521fa0e7b18",
+        "version" : "0.28.0"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -1,32 +1,33 @@
-// swift-tools-version: 6.4
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 let package = Package(
     name: "swiftpy-icloud",
+    platforms: [.iOS(.v26), .macOS(.v26), .visionOS(.v26)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "swiftpy-icloud",
-            targets: ["swiftpy_icloud"]
+            name: "SwiftPyICloud",
+            targets: ["SwiftPyICloud"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/felfoldy/SwiftPy", from: "0.28.0"),
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "swiftpy_icloud",
+            name: "SwiftPyICloud",
+            dependencies: ["SwiftPy"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
-            ],
+            ]
         ),
         .testTarget(
-            name: "swiftpy_icloudTests",
-            dependencies: ["swiftpy_icloud"],
+            name: "SwiftPyICloudTests",
+            dependencies: ["SwiftPyICloud"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
-            ],
+            ]
         ),
     ]
 )
