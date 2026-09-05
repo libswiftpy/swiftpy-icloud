@@ -21,6 +21,24 @@ final class ICloud {
     // use rather than at init — a bundle without a container traps.
     private lazy var database = CKContainer.default().publicCloudDatabase
 
+    /// Assigns a record id without reaching iCloud, so a share link can be
+    /// built before the record exists. The id is handed out before a collision
+    /// could be retried away, so a colliding save fails against the other
+    /// account's record instead of replacing it.
+    func reserveId(model: PyObject) throws(PythonError) -> String {
+        if let id: String = model._icloud_id {
+            return id
+        }
+
+        guard model._fields != nil else {
+            throw .TypeError("'\(py.typeof(model.reference).name)' is not a modeling.model.")
+        }
+
+        let id = Self.shortId()
+        model._icloud_id = id
+        return id
+    }
+
     func save(model: PyObject) async throws -> String {
         let (existingId, name, json) = try encode(model)
 
@@ -76,7 +94,7 @@ final class ICloud {
         guard let result = results[record.recordID] else {
             throw PythonError.RuntimeError("iCloud did not return a save result.")
         }
-        try result.get()
+        _ = try result.get()
     }
 
     /// Ten URL-safe characters provide 60 bits of randomness.

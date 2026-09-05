@@ -49,6 +49,23 @@ public enum SwiftPyICloud {
                 PyBind.function(argc, argv, ICloud.shared.save)
             }
 
+            module.def(
+                "reserve_id(model) -> str",
+                docstring: """
+                Returns the record id the model will be saved under, without
+                saving it.
+
+                model: An instance of a class created with the ``modeling.model``
+                decorator.
+
+                Use this to build a link before the record exists; ``save``
+                reuses the reserved id. Needs no iCloud account, because nothing
+                is uploaded.
+                """
+            ) { argc, argv in
+                PyBind.function(argc, argv, ICloud.shared.reserveId)
+            }
+
             module.asyncDef(
                 "fetch(type, id: str) -> Any",
                 docstring: """
