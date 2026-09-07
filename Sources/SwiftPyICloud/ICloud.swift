@@ -17,9 +17,20 @@ final class ICloud {
     /// types just-in-time in development and Python classes are defined at runtime.
     static let recordType = "Model"
 
-    // CKContainer.default() reads the app's entitlement, so resolve it on first
-    // use rather than at init — a bundle without a container traps.
-    private lazy var database = CKContainer.default().publicCloudDatabase
+    /// Set before first use. An App Clip has its own bundle id, and
+    /// `CKContainer.default()` derives the container from that rather than from
+    /// the entitlement, so it would resolve to a container that does not exist.
+    var containerIdentifier: String?
+
+    // Resolve the container on first use rather than at init — a bundle without
+    // a container traps.
+    private lazy var database = {
+        if let containerIdentifier {
+            CKContainer(identifier: containerIdentifier)
+        } else {
+            CKContainer.default()
+        }
+    }().publicCloudDatabase
 
     func save(model: PyObject) async throws -> String {
         let (existingId, name, json) = try encode(model)

@@ -9,7 +9,12 @@ import SwiftPy
 
 @MainActor
 public enum SwiftPyICloud {
-    public static func initialize() {
+    /// - Parameter containerIdentifier: The container to use instead of the one
+    ///   derived from the bundle id. An App Clip has to name its parent app's
+    ///   container, since it shares the records but not the bundle id.
+    public static func initialize(containerIdentifier: String? = nil) {
+        ICloud.shared.containerIdentifier = containerIdentifier
+
         PyBind.module("icloud", docs: """
         Share ``modeling.model`` instances through iCloud.
 
