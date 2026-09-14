@@ -90,16 +90,12 @@ final class ICloud {
         _ = try result.get()
     }
 
-    /// Ten URL-safe characters provide 60 bits of randomness.
+    private static let idAlphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+
+    /// Ten alphanumeric characters provide ~60 bits of randomness. No `_`:
+    /// CloudKit rejects record names that start with one.
     private static func shortId() -> String {
-        var uuid = UUID().uuid
-        let data = withUnsafeBytes(of: &uuid) { Data($0) }
-        return String(
-            data.base64EncodedString()
-                .replacingOccurrences(of: "+", with: "-")
-                .replacingOccurrences(of: "/", with: "_")
-                .prefix(10)
-        )
+        String((0..<10).map { _ in idAlphabet.randomElement()! })
     }
 
     private static func isCollision(_ error: any Error) -> Bool {

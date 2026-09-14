@@ -1,5 +1,5 @@
 {
-  "originHash" : "da3f47b00a47699286aa432e03dbf2262f1c08e6b65bc04c89de64842d98d656",
+  "originHash" : "6638065379cc475f036d22a1d51a18b9534902716ff446d39500fe2aed7a1833",
   "pins" : [
     {
       "identity" : "swift-syntax",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/felfoldy/SwiftPy",
       "state" : {
-        "revision" : "7d068f690b1184b1593587ec6f775521fa0e7b18",
-        "version" : "0.28.0"
+        "revision" : "091c9b4dee59310a400d4d615975a7ebb6b330c0",
+        "version" : "0.29.0"
       }
     }
   ],
