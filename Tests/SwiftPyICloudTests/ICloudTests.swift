@@ -15,8 +15,8 @@ import SwiftPy
 /// entitlement, so nothing here may reach the container.
 @MainActor
 struct ICloudTests {
-    init() {
-        Interpreter.run("""
+    init() async {
+        await Interpreter.run("""
         from modeling import model
 
         @model
@@ -41,8 +41,8 @@ struct ICloudTests {
         #expect(json == #"{"name": "Sword", "quantity": 2}"#)
     }
 
-    @Test func encodesTheIdOfAnAlreadySavedModel() throws {
-        Interpreter.run("""
+    @Test func encodesTheIdOfAnAlreadySavedModel() async throws {
+        await Interpreter.run("""
         _saved = Item('Shield')
         _saved._icloud_id = 'record-1'
         """)
