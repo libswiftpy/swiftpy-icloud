@@ -24,15 +24,31 @@ final class ICloud {
 
     // Resolve the container on first use rather than at init — a bundle without
     // a container traps.
-    private lazy var database = {
+    private lazy var container = {
         if let containerIdentifier {
             CKContainer(identifier: containerIdentifier)
         } else {
             CKContainer.default()
         }
-    }().publicCloudDatabase
+    }()
+
+    private var database: CKDatabase { container.publicCloudDatabase }
+
+    /// Whether an iCloud account is signed in, which saving and deleting need.
+    func isAccountAvailable() async -> Bool {
+        (try? await container.accountStatus()) == .available
+    }
+
+    /// Without an account CloudKit refuses writes as a permission failure,
+    /// which would read as someone else owning the record.
+    private func requireAccount() async throws {
+        guard await isAccountAvailable() else {
+            throw PythonError.RuntimeError("Sign in to iCloud to save or delete records.")
+        }
+    }
 
     func save(model: PyObject) async throws -> String {
+        try await requireAccount()
         let (existingId, name, json) = try encode(model)
 
         if let existingId {
@@ -125,6 +141,7 @@ final class ICloud {
     }
 
     func delete(id: String) async throws {
+        try await requireAccount()
         do {
             _ = try await database.deleteRecord(withID: CKRecord.ID(recordName: id))
         } catch {

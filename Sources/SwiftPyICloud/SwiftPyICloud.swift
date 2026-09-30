@@ -5,10 +5,26 @@
 //  Created by Tibor Felföldy on 2026-09-03.
 //
 
+import CloudKit
 import SwiftPy
 
 @MainActor
 public enum SwiftPyICloud {
+    /// Whether records can be saved: now, and again whenever the iCloud account
+    /// changes. Fetching works either way.
+    public static func accountAvailability() -> AsyncStream<Bool> {
+        AsyncStream { continuation in
+            let task = Task { @MainActor in
+                continuation.yield(await ICloud.shared.isAccountAvailable())
+                for await _ in NotificationCenter.default.notifications(named: .CKAccountChanged) {
+                    continuation.yield(await ICloud.shared.isAccountAvailable())
+                }
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
+    }
+
     /// - Parameter containerIdentifier: The container to use instead of the one
     ///   derived from the bundle id. An App Clip has to name its parent app's
     ///   container, since it shares the records but not the bundle id.
