@@ -25,6 +25,12 @@ public enum SwiftPyICloud {
         }
     }
 
+    /// Encodes a `modeling.model` now, on the main actor, for a save that runs
+    /// off it, such as from a share sheet. The save doesn't set `_icloud_id`.
+    public static func upload(_ model: PyObject) throws -> ICloudUpload {
+        try ICloud.shared.upload(model)
+    }
+
     /// - Parameter containerIdentifier: The container to use instead of the one
     ///   derived from the bundle id. An App Clip has to name its parent app's
     ///   container, since it shares the records but not the bundle id.
